@@ -1,0 +1,1429 @@
+<html style="" xmlns="http://www.w3.org/1999/xhtml" class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths" data-arp=""><style id="sp-styles">
+    .sp-toast{position:fixed!important;top:96px;left:50%;transform:translateX(-50%) translateY(-8px);opacity:0;padding:8px 14px;border-radius:12px;font-weight:800;font-size:13px;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:2147483647;transition:opacity .22s ease,transform .22s ease;pointer-events:none;max-width:calc(100% - 140px);text-align:center}
+    .sp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .sp-toast.info{background:linear-gradient(90deg,#6a5af9,#38c6fa)}
+    .sp-toast.success{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+    .sp-toast.error{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+
+    #sp-top-panel{position:fixed!important;top:0;left:40px;right:40px;height:84px;z-index:2147483646;backdrop-filter:saturate(120%) blur(6px);background:linear-gradient(90deg,rgba(0,51,204,.88) 0%,rgba(255,255,255,.26) 100%);border-radius:0px;border:1px solid rgba(255,255,255,.38);box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;pointer-events:auto;transition:transform .9s cubic-bezier(.22,.61,.36,1)}
+    #sp-top-panel.collapsed{transform:translateY(-110%);pointer-events:none}
+    #sp-top-panel .sp-inner{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;max-width:100%;padding:4px 8px;width:100%}
+
+    /* Brand */
+    #sp-brand{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-weight:900;font-size:20px;letter-spacing:.3px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.28);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;user-select:none}
+
+    /* Buttons 25px height */
+    .sp-btn,.sp-mini-btn,.sp-icon-btn{appearance:none;border:none;outline:none;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;height:25px;min-height:25px;padding:0 10px;font-weight:700;font-size:11px;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .08s ease,opacity .15s ease;white-space:nowrap;line-height:23px}
+    .sp-btn{background:linear-gradient(90deg,#6a5af9 0%,#38c6fa 100%)}
+    .sp-mini-btn{background:linear-gradient(90deg,#6a5af9,#38c6fa)}
+    .sp-btn.success{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+    .sp-btn.warn{background:linear-gradient(90deg,#f39c12,#e67e22)}
+    .sp-btn.danger{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+    .sp-btn.gray{background:linear-gradient(90deg,#95a5a6,#7f8c8d)}
+    .sp-btn.blue{background:linear-gradient(90deg,#3498db,#2980b9)}
+    .sp-btn:hover,.sp-mini-btn:hover,.sp-icon-btn:hover{opacity:.96;transform:translateY(-1px)}
+
+    /* Circular small icon button for Add Script */
+    .sp-icon-btn{width:25px;padding:0;border-radius:50%;background:linear-gradient(135deg,#6a5af9,#38c6fa);font-size:15px;font-weight:900}
+    .sp-icon-btn .plus{margin-top:-1px}
+
+    #sp-toggle{position:fixed!important;top:6px;right:46px;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.6);background:rgba(0,0,0,.25);color:#fff;font-size:11px;line-height:1;cursor:pointer;z-index:2147483647;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+    #sp-toggle.rot{transform:rotate(180deg)}
+
+    #sp-launcher{position:fixed!important;right:18px;bottom:18px;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;background:linear-gradient(135deg,#0033cc,#38c6fa);color:#fff;cursor:pointer;z-index:2147483647;border:1px solid rgba(255,255,255,.55);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+    #sp-launcher.hide{display:none}
+
+    #sp-scripts-bar{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+    /* Panel image dock: circular 70px */
+    #sp-img-dock{display:none;align-items:center;gap:8px}
+    #sp-img-thumb{width:70px;height:70px;border-radius:50%;object-fit:cover;border:0;box-shadow:none;background:#ffffff;user-select:none;cursor:pointer;display:block}
+
+    /* Tray: fixed 250x210 */
+    #sp-tray{position:fixed!important;right:40px;top:94px;z-index:2147483646;display:none;width:250px;height:215px;transition:opacity .28s ease,transform .28s ease}
+    #sp-tray.open{display:block;opacity:1;transform:translateY(0)}
+    #sp-tray:not(.open){opacity:0;transform:translateY(-6px)}
+    #sp-tray-inner{background:#fff;border:1px solid #eaeaea;border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.18);padding:10px;width:100%;height:100%;overflow:auto}
+    #sp-tray-inner .sp-tray-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    #sp-tray-inner .sp-tray-title{font-weight:800;color:#0033cc;font-size:12px}
+    #sp-tray-inner .sp-tray-sub{font-size:10px;color:#666}
+    .sp-field{display:flex;flex-direction:column;gap:4px;margin:4px 0}
+    .sp-label{font-size:10px;color:#333;font-weight:700}
+    .sp-input,.sp-textarea,#sp-cl-format,#sp-cl-qual{border:1px solid #e1e5ee;border-radius:8px;padding:7px 9px;font-size:11px;color:#222;background:#f9fbff;outline:none;transition:border-color .15s, box-shadow .15s}
+    .sp-input:focus,.sp-textarea:focus{border-color:#6a5af9;box-shadow:0 0 0 3px rgba(106,90,249,.12);background:#fff}
+    .sp-textarea{min-height:62px;max-height:110px;resize:vertical}
+    .sp-row{display:flex;gap:8px;align-items:center}
+    .sp-actions .sp-btn{height:24px;min-height:24px;font-size:10px;padding:0 8px}
+
+    .sp-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:16px;padding:4px 6px;color:#fff;font-weight:800;font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .sp-chip .chip-btn{border:none;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;padding:3px 6px;font-weight:800;cursor:pointer;font-size:10px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .sp-chip .chip-btn.run{background:linear-gradient(90deg,#00b09b,#96c93d); color:#fff; border:none}
+
+    #sp-kbd{display:inline-flex;align-items:center;gap:6px;margin-left:6px}
+    .kbd-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;padding:0;border-radius:50%;font-weight:900;font-size:12px;user-select:none;border:1px solid rgba(255,255,255,.35);box-shadow:0 2px 6px rgba(0,0,0,.18);color:#fff;background:rgba(255,255,255,.18)}
+    .kbd-chip.on{border-color:#27ae60;background:linear-gradient(90deg,#27ae60,#2ecc71);color:#fff}
+    .kbd-chip.off{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.18);color:#fff;opacity:.85}
+
+    /* Classic Image Editor */
+    #sp-classic-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2147483647;display:flex;align-items:center;justify-content:center}
+    #sp-classic-modal{background:#fff;border-radius:14px;min-width:520px;min-height:380px;width:min(820px,82vw);height:min(70vh,620px);resize:both;overflow:auto;border:1px solid #e8e8e8;box-shadow:0 16px 36px rgba(0,0,0,.25);display:grid;grid-template-rows:auto 1fr auto}
+    #sp-classic-modal .hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #eee;background:linear-gradient(180deg,#f8fbff,#ffffff)}
+    #sp-classic-modal .body{display:grid;grid-template-columns:1fr 280px;gap:10px;padding:10px}
+    #sp-classic-modal .vp{position:relative;border:1px solid #e6e6e9;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    #sp-classic-canvas{display:block;width:100%;height:100%;image-rendering:auto;background:#fff}
+    #sp-classic-modal .side{display:flex;flex-direction:column;gap:10px}
+    #sp-classic-modal .ftr{display:flex;justify-content:space-between;gap:8px;padding:10px;border-top:1px solid #eee;background:#f7f9fc}
+
+    /* Hide Webcame button visually; functionality remains */
+    #sp-vcam-toggle{ display:none !important; }
+  </style><head>
+
+<meta charset="UTF-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<!-- noindex	Do not show this page in search results and do not show a "Cached" link in search results.
+	 nofollow	Do not follow the links on this page
+	 none		Equivalent to noindex, nofollow -->
+<meta name="ROBOTS" content="NONE">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Sending SMS</title>
+
+<link rel="Shortcut Icon" type="image/ico" href="images/nhai.ico">
+
+
+
+
+
+
+<meta charset="UTF-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<!-- noindex	Do not show this page in search results and do not show a "Cached" link in search results.
+	 nofollow	Do not follow the links on this page
+	 none		Equivalent to noindex, nofollow -->
+<meta name="ROBOTS" content="NONE">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="Content-Security-Policy-Report-Only" content="default-src 'self';">
+<style type="text/css">
+.container {
+    width: 95% !important;
+}
+</style>
+<title>Sending SMS</title>
+<link rel="Shortcut Icon" type="image/ico" href="https://sarathi.parivahan.gov.in/cdn-sarathi/images/sarathi1.ico">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/bootstrap/bootstrap-theme.min.css?v=1.0" type="text/css" rel="stylesheet">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/bootstrap/bootstrap.min.css?v=1.0" type="text/css" rel="stylesheet">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/jquery/jquery-ui.min.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/sarathi/custom.css?v=1.0" type="text/css" rel="stylesheet">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/sarathi/layout.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/sarathi/sow4.css?v=1.0" type="text/css" rel="stylesheet">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/fonts/font-awesome.min.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="https://sarathi.parivahan.gov.in/cdn-sarathi/css/sarathi/slot4.css?v=1.0" rel="stylesheet" type="text/css">
+<script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-W8LPQ3GPJF&amp;cx=c&amp;gtm=4e5am0"></script><script type="text/javascript" src="https://sarathi.parivahan.gov.in/cdn-sarathi/js/jquery/jquery.min.js?v=1.0"></script>
+<script type="text/javascript" src="https://sarathi.parivahan.gov.in/cdn-sarathi/js/jquery/jquery-ui.min.js?v=1.0"></script>
+<script type="text/javascript" src="https://sarathi.parivahan.gov.in/cdn-sarathi/js/bootstrap/bootstrap.min.js?v=1.0"></script>
+<script type="text/javascript" src="https://sarathi.parivahan.gov.in/cdn-sarathi/js/modernizr/modernizr-2.6.2-respond-1.1.0.min.js?v=1.0"></script>
+
+<script>
+	if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+		var msViewportStyle = document.createElement("style")
+		msViewportStyle.appendChild(document
+				.createTextNode("@-ms-viewport{width:auto!important}"))
+		document.getElementsByTagName("head")[0].appendChild(msViewportStyle)
+	}
+</script>
+
+<style>
+div.tableContainer {
+	clear: both;
+	max-height: 285px;
+	overflow: auto;
+	width: 756px
+}
+
+/* Reset overflow value to hidden for all non-IE browsers. */
+html>body div.tableContainer {
+	overflow: hidden;
+	width: 756px
+}
+
+/* define width of table. IE browsers only                 */
+div.tableContainer table {
+	float: left;
+	width: 740px
+}
+
+/* define width of table. Add 16px to width for scrollbar.           */
+/* All other non-IE browsers.                                        */
+html>body div.tableContainer table {
+	width: 756px
+}
+
+/* set table header to a fixed position. WinIE 6.x only                                       */
+/* In WinIE 6.x, any element with a position property set to relative and is a child of       */
+/* an element that has an overflow property set, the relative value translates into fixed.    */
+/* Ex: parent element DIV with a class of tableContainer has an overflow property set to auto */
+thead.fixedHeader tr {
+	position: relative
+}
+
+/* set THEAD element to have block level attributes. All other non-IE browsers            */
+/* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+html>body thead.fixedHeader tr {
+	display: block
+}
+
+/* make the TH elements pretty */
+thead.fixedHeader th {
+	font-weight: normal;
+	padding: 8px 3px;
+	text-align: center;
+	background-color: #1e7c9a;
+	padding: 10px 0px;
+}
+
+/* define the table content to be scrollable                                              */
+/* set TBODY element to have block level attributes. All other non-IE browsers            */
+/* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+/* induced side effect is that child TDs no longer accept width: auto                     */
+html>body tbody.scrollContent {
+	display: block;
+	max-height: 233px;
+	overflow: auto;
+	width: 100%;
+	text-align: center;
+}
+
+/* define width of TH elements: 1st, 2nd, and 3rd respectively.          */
+/* Add 16px to last TH for scrollbar padding. All other non-IE browsers. */
+/* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+html>body thead.fixedHeader th {
+	width: 40px;
+}
+
+html>body thead.fixedHeader th+th {
+	width: 240px;
+}
+
+html>body thead.fixedHeader th+th+th {
+	width: 100px;
+}
+
+html>body thead.fixedHeader th+th+th+th {
+	width: 276px;
+}
+
+html>body thead.fixedHeader th+th+th+th+th {
+	width: 100px;
+}
+
+/* define width of TD elements: 1st, 2nd, and 3rd respectively.          */
+/* All other non-IE browsers.                                            */
+/* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+html>body tbody.scrollContent td {
+	width: 40px;
+}
+
+html>body tbody.scrollContent td+td {
+	width: 240px;
+}
+
+html>body tbody.scrollContent td+td+td {
+	width: 100px;
+}
+
+html>body tbody.scrollContent td+td+td+td {
+	width: 276px;
+}
+
+html>body tbody.scrollContent td+td+td+td+td {
+	width: 84px;
+}
+
+td {
+	padding: 8px;
+}
+</style>
+
+<style>
+   .well {
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        display:none;
+        margin:1em;
+        padding:1px;
+        padding-top:2px;
+    }
+ .fadeandscale {
+    -webkit-transform: scale(0.8);
+       -moz-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+            transform: scale(0.8);
+}
+.popup_visible .fadeandscale {
+    -webkit-transform: scale(1);
+       -moz-transform: scale(1);
+        -ms-transform: scale(1);
+            transform: scale(1);
+}
+
+</style>
+<script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-26415849-2" defer=""></script><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/libraries/gotwl-cdpd.min.js" defer=""></script><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/libraries/gotwl-jqr.min.js" defer=""></script><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/libraries/gotwl-pcss.min.js" defer=""></script><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/libraries/gotwl-libs.min.js" defer=""></script><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/scripts/gotwl-mods.min.js" defer=""></script><link type="text/css" rel="stylesheet" href="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/styles/cdac-gist-fonts.css"><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/scripts/gotwl-main.min.js" defer=""></script><script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/scripts/gotwl-main.min.js" defer=""></script></head>
+<body style="background-color: #ecfafd;" onload="noBack(); " onpageshow="if (event.persisted) noBack();" onunload="">
+<!-- Dialog Box for Error Page Start -->
+
+	<!-- <div id="fadeandscale" class="well">
+		<div id="dialog">
+			<div id="msgheader">Error Message</div>
+			<div id="msgbody"></div>
+			<div id="btnOk">
+				<button class="fadeandscale_close btn btn-success">OK</button>
+			</div>
+		</div>
+	</div> -->
+
+	<!-- Dailog Box for Error Page End -->
+	<div id="gotranslateDependenciesProgressBar" class="NALOC" style="display: none !important; position: fixed !important; right: 50% !important; top: 0px !important; z-index: 2147483647 !important;">
+                          <img src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/images/preloader.gif" class="NALOC" style="width: 32px !important; height: 32px !important; background: #b5e0ee !important; border: 1px solid teal !important; opacity: 1 !important;" onload="this.parentNode.style.display = 'block';">
+                        </div><div class="main">
+		<div class="container padding0px">
+			<div class="header">
+				
+
+
+
+
+
+
+
+
+
+
+
+<meta name="robots" content="NOINDEX,NOFOLLOW">
+<meta http-equiv="Pragma" content="no-cache">
+<style type="text/css">
+.header
+{
+ /* background-color: #1ca6ef; */
+} 
+.headerslot_main
+{
+ background-color: #1ca6ef;
+}
+
+.parivahan_logo img
+{
+padding: 0 0 0 3% !important;
+}
+.font3 {
+	text-shadow: 0px 4px 3px rgba(49, 48, 48, 0.4), 0px 8px 13px rgba(193, 183, 183, 0.1), 0px 18px 23px rgb(234, 226, 226);
+	color: #3081c5;
+	font-weight: bold;
+	text-align: center;
+	font-family: Trebuchet MS;
+}
+@media screen and (max-width: 550px) {
+	.font3size {font-size:1.2em;}
+	.headerslot_main
+{
+ background-color: #1ca6ef !important;
+ overflow: hidden;
+}
+.parivahan_logo img
+{
+padding: 10px !important;
+}
+.parivahan_mobileview
+{
+margin: 10px !important;
+}
+}
+@media (min-width: 551px) and (max-width: 991px) {
+	.font3size {font-size:1.3em;}
+.headerslot_main
+{
+ background-color: #1ca6ef !important;
+ overflow: hidden;
+}
+
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+	.font3size {font-size:1.3em;}
+}
+@media screen and (min-width: 1200px) {
+	.font3size {font-size:1.3em;}
+}
+</style>
+
+<script type="text/javascript">
+	/* added on 05-05-2017 for disabling rt.click, ctrl+shift+i, ctrl+shift+u to restrict inspect mode*/ 
+		$(window).on('keydown',function(event)
+			    {
+			    if(event.keyCode==123)
+			    {
+			        return false;
+			    }
+			    else if(event.ctrlKey && event.shiftKey && event.keyCode==73)
+			    {
+			        return false;  //Prevent from ctrl+shift+i
+			    }
+			    else if(event.ctrlKey && event.keyCode==73)
+			    {
+			        return false;  //Prevent from ctrl+shift+i
+			    }else if (event.ctrlKey && (event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 85 || event.keyCode === 117)) 
+				{
+			        return false;
+			    }
+			});
+			$(document).on("contextmenu",function(e)
+			{
+				e.preventDefault();
+			});
+	
+</script>
+
+
+	<script> 
+
+	
+	var dateStr=1738143801229,servDay=29,servMonth=1,servYear=2025;
+	
+	console.log("server date == "+dateStr);
+	try{
+		console.log(" servDAy new==> "+servDay +" servMonth ---"+servMonth+" servYear ==> "+servYear);
+	}catch(e){
+		alert(e);
+	}
+	
+	var dateStr=1738143801229
+// 	alert("dateStr value==> "+dateStr);
+	var serverTimeMillisGMT = Date.parse(new Date(dateStr).toUTCString());
+   /*  var localMillisUTC = Date.parse(new Date().toUTCString());
+    offset = serverTimeMillisGMT -  localMillisUTC;
+	var diff=localMillisUTC+offset; */
+	//alert("sertime==> "+msToTime(serverTimeMillisGMT) +" ===local time => "+msToTime(localMillisUTC) +" offsert ===> "+msToTime(offset) +" time==> "+msToTime(diff));
+	var str="AM";
+	var count=0;
+	function msToTime(duration) {
+        var milliseconds = duration % 1000
+        , seconds = Math.floor((duration / 1000) % 60)
+        , minutes = Math.floor((duration / (60 * 1000)) % 60)+30
+        , hours = Math.floor((duration/(1000*60*60))%24)+5+parseInt(minutes>59 ? "1" :"0" );
+   
+//     console.log("duration/(1000*60*60) ==> "+duration/(1000*60*60)+"  Math.floor((duration/(1000*60*60))%24) ==> "+Math.floor((duration/(1000*60*60))%24)+" ===hours ==> "+hours);
+    
+	    if(hours>11){
+	    	if(hours==12){
+	    		str="PM";
+	    	}
+	    	else if(hours<24){
+	    		str="PM";
+	    		hours=hours-12;
+	    	}
+	    	else{
+	    		if(hours==24){
+	    			str="AM";
+	    			hours=12;
+	    		}
+	    		else{
+	    			str="AM";
+	    			hours=hours-24;
+	    		}
+	    	}
+	    }
+	    
+	    if(minutes>59){
+	    	minutes= minutes-60;
+	    }
+	    
+	    /* if(hours>12){
+	        str=hours==24 ? "AM" :"PM";
+	    	hours= hours-12;
+	    	
+	    } */
+	    
+	   
+	   /*  if(hours>12 && hours<25){
+	    	hours=hours-12;
+	    	
+	    } */
+	   /*  if(hours==12){
+	    	str="PM";
+	    } */
+	    hours = (hours < 10) ? "0" + hours : hours;
+	    minutes = (minutes < 10)   ? "0" + minutes :  minutes ;
+	    seconds = (seconds < 10)   ? "0" + seconds :  seconds ;
+	    count=seconds;
+		var time=hours + ":" +  minutes + ":" + seconds;	
+	    return time;
+    }
+    
+function noBack(){ 
+	window.history.forward(1);
+// 	$(document).on("keydown", function (e) {
+// 		console.log("e.which==> "+e.which);
+// 	    if (e.which === 8 && !$(e.target).is("input, textarea")) {
+// 	        e.preventDefault();
+// 	    }
+// 	});
+}
+var serverTime = "Wed Jan 29 15:13:21 IST 2025";
+		var localTime = new Date();
+		var ser = new Date(serverTime);
+		var ti = localTime.toLocaleTimeString();
+		var serti = ser.toLocaleTimeString();
+		// console.log("server time===> "+serverTime +" ==Local Time==> "+localTime);
+		// console.log(serti+" time == "+ti);
+		var myVar = setInterval(function() {
+			myTimer();
+		}, 1000);
+
+		var offset, diff;
+		var localMillisUTC = Date.parse(new Date().toUTCString());
+		offset = serverTimeMillisGMT - localMillisUTC;
+		diff = localMillisUTC + offset;
+		var d = new Date();//time;
+		/* var curr_date = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();	
+		var curr_month = parseInt(d.getMonth()) + 1;
+		var curr_year = d.getFullYear(); */
+		var curr_date = servDay < 10 ? "0" + servDay : servDay;	
+		var curr_month = parseInt(servMonth);
+		var curr_year = servYear;
+		var colorArr = new Array();
+		colorArr.push("#FA026A");
+		colorArr.push("#9B02FA");
+		colorArr.push("#4402FA");
+		// #1C573F
+		// #0C0CEB
+		// #FA02BC
+		function myTimer() {
+			try {
+				document.getElementById("currdate").innerHTML = curr_date + "-"+ (curr_month<10 ? "0"+curr_month : curr_month) + "-" + curr_year;
+				diff = diff + 1000;
+				document.getElementById("time").innerHTML = msToTime(diff)+ " " + str;
+				var i = count % 3;
+				if (i == 0 || i == 1 || i == 2) {
+					var color = Math.floor(Math.random() * 16777215).toString(
+							16);
+					var marq = $("#marq");
+					marq.css('color', colorArr[i]);
+					//console.log(colorArr[i]);
+					// 			marq.css('color','#'+color);
+					// 			marq.css('color',brighten('#'+color,4.5));
+				}
+				// 	console.log(" ==offset ==> "+offset+" ==diff => "+diff +" ===local time => "+msToTime(localMillisUTC)+" time==> "+msToTime(diff));			
+				//  var t=d.toLocaleTimeString();
+				// document.getElementById("time").innerHTML=t;
+				// )
+				// console.log("curr_month==> "+curr_month);
+			} catch (e) {
+				//alert(e);
+			}
+		}
+
+		function brighten(color, percent) {
+			var r = parseInt(color.substr(1, 2), 16);
+			var g = parseInt(color.substr(3, 2), 16);
+			var b = parseInt(color.substr(5, 2), 16);
+
+			return '#' + Math.min(255, Math.floor(r * percent)).toString(16)
+					+ Math.min(255, Math.floor(g * percent)).toString(16)
+					+ Math.min(255, Math.floor(b * percent)).toString(16);
+		}
+	</script>
+
+	<div class="col-md-12 padding0px headerslot_main" style="">
+		<!-- <div class="col-md-3 padding0px mb_textcenter">
+			<img src="images/logo.png" alt="Parivahan Sewa" />
+		</div> -->
+		<!-- <div class="col-md-6 padding0px text-center">
+			<img src="./images/ministry.png"
+				alt="Ministry of Road Transport & Highways" />
+		</div> -->
+		<div class="col-md-9 col-sm-9 col-xs-12 padding0px mb_textcenter parivahan_logo">
+		<!-- <img src="images/logo/sarathi_logo12.png" alt="Parivahan Sewa" /> -->
+		<div class="col-md-7 col-xs-12">
+			 <div class="ministry_nic_logo padding0px mb_textcenter">
+				<img src="images/logo/ministry-nic-logo.png" alt="Parivahan Sewa">
+			</div>
+			</div>
+			<div class="col-md-5 col-xs-12">
+			 <div class="ministry_nic_logo padding0px mb_textcenter">
+				<img src="images/logo/parivahan-logo.png" alt="Sarathilogo">
+			</div>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-3 col-xs-12" style="padding: 14px 0px 0px 10px;">
+			<div class="col-md-12 padding0px  mb_width50p parivahan_mobileview">
+				<div class="col-md-7 margin_right5px padding0px" style="font-size: 12px; color: #ffffff;">
+					<label class="margin0px bold" style="color: #000; letter-spacing: 0.5px;">DATE:</label> <span id="currdate">25-10-2025</span>&nbsp;&nbsp; 
+					<br>
+					<br>
+					<label style="color: #000; letter-spacing: 0.5px;">TIME:</label>&nbsp;<span id="time" style="color: #ffffff; letter-spacing: 0.5px;">06:48:48 PM</span>
+				</div>
+				<div id="Sarathi_Lang_ID" style="display: flex !important;"><span style="color: #0a0a0a;font-family:system-ui;letter-spacing: 0.8px;font-weight: 600;">Language:</span><div id="gotwlBrandContainer" class="NALOC" style="border: 1px solid rgb(227, 227, 227) !important; padding: 3px !important; gap: 3px !important; border-radius: 4px !important; background-color: white !important; display: flex !important; justify-content: center !important; align-items: center !important;"><select id="cdacL10nLanguagesComboBox" class="NALOC" margin="unset" title="Choose Language" style="border: 1px solid rgb(209, 209, 209) !important; border-radius: 4px !important;" fdprocessedid="clabdf"><option class="NALOC" value="English" code="eng" selected="selected">English</option><option class="NALOC" value="Hindi" code="hin">Hindi</option><option class="NALOC" value="Kannada" code="kan">Kannada</option><option class="NALOC" value="Tamil" code="tam">Tamil</option></select><a href="https://cdac.in" target="_blank" style="text-decoration: none !important; width: unset !important; height: unset !important;"><img src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/images/cdac-logo.png" alt="C-DAC Logo" class="NALOC" title="Powered by LPMF, C-DAC, Pune" border="unset" border-radius="unset" margin="unset" padding="unset" style="width: 25px !important; height: 20px !important;"></a></div></div>
+				<div class="col-md-4 padding0px col-md-offset-1 mb_textcenter">
+					
+						<div class="sarathi_login">
+			<!----------------------munna--------------------------------->
+					<ul class="list-unstyled" style="padding: 6px 0 0 0px;">
+					<li class="list-unstyled"> 
+                <span class="font_increase"><a href="#" id="decfont">A<sup>-</sup></a></span>
+                <span class="font_increase"><a href="#" id="resetfont">A</a></span>
+                <span class="font_increase"><a href="#" id="incfont">A<sup>+</sup></a></span>
+</li>
+			                	
+		        </ul></div>	
+				</div>
+				<br>
+				<!-- <div id="Sarathi_Lang_ID" >Language:</div> -->
+
+								
+<!-- 							<option value="?request_cookie_locale=hi">Hindi</option> -->
+<!-- 							<option value="?request_cookie_locale=en">English</option> -->
+<!-- 							<option value="?request_cookie_locale=te">Telugu</option> -->
+<!-- 							<option value="?request_cookie_locale=ta">Tamil</option> -->
+<!-- 							<option value="?request_cookie_locale=mr">Marathi</option> -->
+
+						
+			</div>
+			
+<!-- 						<option value="opel">Espanol</option> -->
+					
+		
+	
+	</div>
+	</div>
+	
+	<div class="col-md-12" window.onload="myFunction();">
+			<marquee scrolldelay="150" id="marq" style="color: rgb(250, 2, 106);">
+			
+					<b style="font-size:16px">
+					
+			 		ALL: Attention to State Admins &amp; RTOs, Please define Holidays(State level) &amp; Special Holidays(RTO level) for the year 2025.&emsp;&emsp;&emsp;&emsp;
+			 		</b>
+ 				
+				
+			</marquee>
+	</div>
+
+<!-- 		<div class="col-md-12"> -->
+<!-- 		<marquee scrolldelay="150" id="marq"> -->
+<!-- 		<b style="font-size:16px; color:red">Attention to State Admin's & RTO's, Please define Holidays(State level) & Special Holidays(RTO level) for the year 2022.</b> -->
+<!-- 		</marquee> -->
+<!-- 		</div> -->
+
+	
+	
+		
+		
+		
+		<!-- ------------------font-size (A, A-, A+)------------------- -->
+	<script> 
+	$('#incfont').click(function () {
+        curSize = parseInt($('body').css('font-size')) + 2;
+        if (curSize <= 24)
+            $('body').css('font-size', curSize);
+    });
+    $('#decfont').click(function () {
+        curSize = parseInt($('body').css('font-size')) - 2;
+
+        if (curSize >= 12)
+            $('body').css('font-size', curSize);
+    });
+    $('#resetfont').click(function () {
+        curSize = parseInt($('body').css('font-size'));
+        $('body').css('font-size', '13px');
+    });
+
+   $('.form-text').bind("cut copy paste", function(e) {
+      e.preventDefault();
+      alert("You cannot paste into this text field.");
+      $('.form-text').bind("contextmenu", function(e) {
+     e.preventDefault();
+  }); });
+
+ $(".faq li > *:not(h4)").hide();
+ $(".faq h4").click(function() {
+ $(this).siblings().slideToggle("slow");
+ });
+	</script>	
+
+	
+
+
+
+
+			</div>
+			<div class="width100p">
+				
+
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+.dropdown-menu > li > a {
+    color: #333 !important;
+    letter-spacing: 0.05em;
+    font-family: 'Source Code Pro', sans-serif;
+    font-weight: 100 !important;
+    text-shadow: none;
+}
+.navbar-inverse .navbar-nav > li > a {
+    /* color: #FFFFFF; */
+    color: ghostwhite;
+    letter-spacing: 0.8px;
+    font-family: 'Source Code Pro', sans-serif;
+}
+
+.dropdown-menu>li>a:hover
+{
+color: #0040f1 !important;
+}
+.dropdown-menu > li
+{
+    border-bottom: 1px dotted #333;
+}
+
+
+</style>
+<script type="text/javascript">
+
+$(document).ready(function() {	
+	 $('ul.nav li.dropdown').hover(function() {
+		  $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(200);
+		}, function() {
+		  $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(200);
+	});
+	}); 
+
+</script>
+
+
+
+<div class="container-fluid">
+	
+</div>
+<nav class="navbar navbar-inverse navigation-background" role="navigation">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" autofocus="">
+							<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+						</button>
+					</div>
+
+		<div class="collapse navbar-collapse" id="navbar">
+			<ul class="nav navbar-nav">
+				<li><a href="loginPage.do ">HOME</a></li>
+			
+			    
+				
+				
+				
+				
+				
+
+
+<!-- 						<ul class="dropdown-menu sub-menu"> -->
+
+
+
+
+
+<!-- 						</ul> -->
+<!-- 					</li> -->
+
+			
+						
+				
+
+								
+
+
+				
+
+				
+				
+					
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+					<!-- <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Send SMS <b class="caret"></b></a>
+						<ul class="dropdown-menu sub-menu">					
+							
+							<li><a href="smsReq.do">Send SMS Request</a></li>
+							<li><a href="perrescheduleOfLL.do">LL Test Reschedule</a></li> 
+					   </ul>
+					</li> -->
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+
+<!-- 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Appointment Reschedule <b class="caret"></b> </a> -->
+<!-- 					<ul class="dropdown-menu sub-menu"> -->
+<!-- 				    <li><a href="llslotReschedule.do">LL Reschedule Slots </a></li> -->
+<!-- 					<li><a href="dlslotReschedule.do">DL Reschedule Slots</a></li> -->
+<!-- 					<li><a  href="rescheduleOfDLTRANS.do">DL Transaction Reschedule</a></li> -->
+<!-- 					<li><a href="ApplicationwiseReschedule.do">ApplicationWiseReschedule</a></li> -->
+<!-- 					</ul> -->
+<!-- 					</li> -->
+					
+
+				
+				
+				
+					
+				 
+				
+				
+				
+				
+				  
+				  
+				
+				  
+				
+				
+				
+				
+				
+				
+				
+				
+				<!-- <li><a href="JavaScript:void(0);">Help</a></li> -->
+				<!-- VIP DL slot booking provision for rto authority -->
+				
+				
+				
+	
+			
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Slot Booking <b class="caret"></b> </a>
+						<ul class="dropdown-menu sub-menu" style="border-bottom: 2px solid #0040f1;">
+							<li><a href="llslotbook.do?id=lltest">LLTest Slot Booking</a></li>
+							<li><a href="dlslotbook.do">DLTest Slot Booking</a></li>	
+<!-- 							<li><a href="clslotbook.do?id=cltest">CLTest Slot Booking</a></li>					 -->
+							<li><a href="llslotbook.do?id=dltrans">LL/DL Services Slot Booking </a></li>															
+							<li><a href="clslotbook.do?id=cltest">CLTest Slot Booking</a></li>
+							
+						
+						</ul>
+					</li>
+					
+						
+						
+						<!-- applicationwise LL Enquiry -->
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">ApplicationWise Enquiry <b class="caret"></b> </a>
+						<ul class="dropdown-menu sub-menu" style="border-bottom: 2px solid #0040f1;">
+							<li><a href="applllenquiry.do?id=lltest">LL Slot Enquiry</a></li>
+							<li><a href="appldlenquiry.do?id=dltest">DL Slot Enquiry</a></li>
+							<li style="border-bottom: none;"><a href="appldltranenquiry.do?id=dltrans">DL/LL Services Slots Enquiry</a></li>
+						</ul>
+					</li>
+					
+						
+										
+					 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Slots Enquiry <b class="caret"></b></a>
+						  <ul class="dropdown-menu sub-menu" style="border-bottom: 2px solid #0040f1;">
+							<li><a href="llSlotEnquiry.do">LL Slots Enquiry</a></li>
+							<li><a href="dlSlotEnquiry.do">DL Slots Enquiry</a></li>
+							<li><a href="transSlotEnquiry.do?id=DLTransEnquiry">DL/LL Services Slots Enquiry</a></li>
+							<li><a href="clSlotEnquiry.do">CL Slot Enquiry</a></li>
+							<li><a href="holidayReport.do">Holiday Calendar</a></li>
+							<li><a href="appConfiguidlines.do">Appointment Configuration Details</a></li>			
+							 
+<!-- 							 <li><a href="llTestAppReports.do">Appointment Reports</a></li> -->
+																						
+						  </ul>
+					   </li>
+					   
+					   <!-- 		Commented rtostatistics.do during internal audit testing -->
+					   
+					   
+					   	
+					 
+					   
+					   <!--  <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Statewise Reschedule <b class="caret"></b></a>
+						  <ul class="dropdown-menu sub-menu">
+							<li><a href="strescheduleOfLL.do">Statewise Reschedule</a></li>														
+						  </ul>
+					   </li> -->				   
+			
+					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Slots Cancellation
+ <b class="caret"></b></a>
+						<ul class="dropdown-menu sub-menu" style="border-bottom: 2px solid #0040f1;">					
+							<li><a href="cancellationLLSlotBooking.do">Cancellation LL Slot Booking
+</a></li>
+							<li><a href="cancellationDLSlotBooking.do">Cancellation DL Slot Booking
+</a></li>
+							<li><a href="cancellationDLTransSlotBooking.do">Cancellation LL/DL Slot Booking</a></li>
+					 		<li><a href="cancellationCLSlotBooking.do">Cancellation CL Slot Booking</a></li>
+					 	
+					   </ul>
+					</li>
+					
+
+				
+					
+					
+					
+				<!-- <li><a href="JavaScript:void(0);">Help</a></li> -->
+			<!-- 	<li><a href="JavaScript:void(0);">Help</a></li> -->
+			<li><a href="loginPage.do ">Help
+</a></li>
+			
+			
+
+			 
+			</ul>
+							
+		<ul class="nav navbar-nav navbar-right">
+              <li>	<a href="sarathilogin.do">Login
+              </a></li>	
+		</ul>
+							
+	</div>
+			<!-- /.navbar-collapse -->
+	</div>
+</nav>
+
+<div class="container">
+
+<div style="font-size: 17px; margin: 10px 0 0 0; letter-spacing: 0.5px;" class="text-right">
+
+<a href="https://sarathi.parivahan.gov.in/sarathiservice/sarathiHomePublic.do" style="color: #428bca !important;letter-spacing: 0.09em;font-family: 'Source Code Pro', sans-serif;font-weight: 100;font-size: 14.5px;">SarathiOnWeb</a>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="https://sarathi.parivahan.gov.in/sarathi/login.do" style="color: #428bca !important;letter-spacing: 0.09em;font-family: 'Source Code Pro', sans-serif;font-weight: 100;font-size: 14.5px;">Common Portal</a>&nbsp;&nbsp;&nbsp;
+
+
+<a href="https://sarathi.parivahan.gov.in/SarathiReport/sarathilogin.do" style="color: #428bca !important;letter-spacing: 0.09em;font-family: 'Source Code Pro', sans-serif;font-weight: 100;font-size: 14.5px;">MIS Reports</a>&nbsp;&nbsp;&nbsp;
+</div>
+</div>
+
+
+			</div>
+			<div id="bdheight" class="content" style="min-height: 400px;">
+				
+
+
+
+
+
+
+
+
+
+
+
+
+<title>LL TEST APPOINTMENTS</title>
+
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="This is my page">
+
+<!-- Confirm CSS files -->
+
+
+
+
+<link rel="stylesheet" href="./css/slot4.css">
+	
+<!-- Load JavaScript files -->
+
+
+
+
+
+
+
+<sx:head>
+
+<script>
+	$(document).bind("contextmenu",function(e) {
+	    e.preventDefault();
+	});
+	
+	$(document).keydown(function(e){
+	    if(e.which === 123){
+	       return false;
+	    }
+	});
+
+</script>
+
+
+
+
+ <div class="col-md-12">
+		<div class="row" align="center">
+			<div class="panel panel-primary">
+				<div class="panel-heading" style="text-align: left">
+					<h3 class="panel-title">
+						DL TEST APPOINTMENTS
+					</h3>
+				</div>
+				<div class="panel-body">
+
+					        
+<form id="dlslotbookprev" name="dlTestAppoint" onsubmit="saveDLSlotdet()" action="/slots/insdlSlotdet.do" method="post">
+						<div class="col-md-12">
+							<div class="row">
+								<fieldset class="scheduler-border col-md-12">
+									<legend class="scheduler-border">
+										DL Test Appointment Details Preview</legend>
+									
+									<div class="table-responsive col-md-6 col-md-offset-3">
+										<table class="table table-bordered NALOC">
+							    <tbody class="NALOC"><tr class="NALOC">
+							      <td class="NALOC">Applicant Name</td>
+
+									<td width="50%" class="NALOC"> NILESHKUMAR M PATEL</td>
+							    </tr> 
+							    <tr class="NALOC">
+							      <td class="NALOC">Gardian of</td>
+
+                                 <td class="NALOC"> MAHENDRABHAI  </td>
+							    </tr>
+							     <tr class="NALOC">
+							      <td class="NALOC">Application No</td>
+							      <td class="NALOC">3644185024</td>						      
+							    </tr>
+							    <tr class="NALOC">
+							      <td class="NALOC">RTO	</td>
+							      
+							      <td class="NALOC">ASST.RTO,BARDOLI</td>	
+							    </tr>
+							    <tr class="NALOC">
+						      <td class="NALOC">Mobile no. 	</td>
+						      <td width="50%" class="NALOC">9316295150</td>
+	
+						    </tr>
+							</tbody></table>
+									</div>
+									<div class="col-md-12 bottom-space">
+										<div class="table-responsive col-md-6 col-md-offset-3">
+										<table class="table table-bordered NALOC">
+							     <tbody class="NALOC"><tr class="NALOC">
+									 <th class="NALOC">CLASS OF VEHICLE</th>		
+							        <th class="NALOC">DATE</th>
+							        <th class="NALOC">TIME</th>
+							     </tr>
+							    						      
+								    <tr class="NALOC">
+								    	
+								    	<td class="NALOC">2-WHEELER</td>
+								    	<td class="NALOC">29-01-2025</td>
+								    	<td class="NALOC">17.00-18.00</td>
+								    </tr>
+						      						      
+								    <tr class="NALOC">
+								    	
+								    	<td class="NALOC">4-WHEELER</td>
+								    	<td class="NALOC">29-01-2025</td>
+								    	<td class="NALOC">17.00-18.00</td>
+								    </tr>
+						      
+							</tbody></table>
+										</div>
+									</div>
+									<div class="col-md-12 bottom-space text-success bold text-left">
+										* SMS will be sent to the above mobile number
+									</div>
+									<div class="col-md-12">
+											<button type="submit" id="slotcnfrmbtn" name="save" value="  CONFIRM TO SLOTBOOK  " class="btn top-space" fdprocessedid="i6nq3">
+  CONFIRM TO SLOTBOOK  
+</button>
+
+											<input type="button" value="  BACK " name="back" class="btn top-space" onclick="backslotdet();" method="backDLTestfrm" fdprocessedid="71zuts">
+											<input type="button" value="  HOME  " name="HOME" class="btn top-space" onclick="javascript:window.location.href='slothome.do'" fdprocessedid="701bst">
+											
+									</div>
+								</fieldset>
+
+
+							</div>
+						</div>
+
+
+					</form>
+
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+ 
+ 
+	
+
+<script>
+function saveDLSlotdet() {
+	document.getElementById("slotcnfrmbtn").disabled =true;
+}
+function backslotdet(){
+	var url = "bckdlappldet.do";
+	document.dlTestAppoint.action = url;
+	document.dlTestAppoint.submit();
+}
+
+/* function saveDLSlotdet() {
+		document.getElementById("slotcnfrmbtn").disabled =true;
+		var url = "insdlSlotdet.do";
+		document.dlslotbookprev.action = url;
+		document.dlslotbookprev.submit();
+		return true;
+	} */	
+</script>
+
+
+			</sx:head></div>
+			<div class="footer">
+					<div class="width100p mb_textcenter">
+		<div class="col-md-3 col-sm-3 col-xs-3">
+			<div class="nic_logo">
+				<img src="images/footer/logo.png" alt="NIC" style="cursor: pointer" onclick="javascript:w=window.open('http://www.nic.in','mywin');">
+			</div>
+		</div>
+		<div class="col-md-6 col-sm-3 padding0px col-xs-6" style="text-align: center;font-size: 12px;padding-top: 10px;">
+			<a href="http://www.nic.in" target="_blank" style="text-decoration: none; cursor: pointer;color: #fff;">Designed,
+				developed and hosted by <b style="color: #0072ff;"></b><br> National Informatics Centre
+			</a>
+		</div>
+		<div class="col-md-3 col-sm-3 text-right col-xs-3">
+			
+			<div style="color: #fff;">
+				<b>IP:</b>
+
+			</div>
+			<div class="gov_logo">
+				<img src="images/footer/digital_logo_main.png" alt="Gov" border="0" style="cursor: pointer" onclick="javascript:w=window.open('http://www.india.gov.in','mywin');">
+				<br> <font style="color: gray"><!-- <script
+						type="text/javascript" src="js/counter.js"></script> --></font>
+			</div>
+		</div>
+	</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<!-- Button trigger modal -->
+	
+		
+		<div id="fadeandscaleChkLst" class="well fadeandscale">
+			<div id="dialogChkLst">
+				<div id="msgheaderChkLst">Check List Details
+					<a href="#yourModalId" aria-label="close" style="float: right;padding-right:1%"><img src="./images/delete.jpg " style="height: 16px;" onclick="checkLstOk(this)"></a>
+				</div>
+				<div id="msgbodyChkLst"></div>
+				<div id="btnOkChkLst">
+					<button id="btnOkChkLst" onclick="checkLstOk(this)" class="fadeandscale_close btn btn-success">Skip</button>
+<!-- 					<button id="btnOkChkLst" onclick="checkLstOk(this)" class="fadeandscale_close btn btn-success">Skip</button> -->
+<!-- 					<button onclick="confirm(this)"  class="fadeandscale_close btn btn-warning">OK</button> -->
+				</div>
+			</div>
+		</div>
+		
+	<div id="fadeandscaleconfirm" class="well fadeandscale">
+			<div id="confirmdialog">
+				<div id="cnfrmmsgheader">Confirmation Message</div>
+				<div id="cnfrmmsgbody"></div>
+				<div class="padd2 col-md-12">
+<!-- 				<div id="btnYes" class="col-md-6"> -->
+					<button onclick="confirmation(this)" id="btnYes" class="col-md-2 col-md-offset-3 fadeandscale_close btn text-center">YES</button>
+<!-- 				</div> -->
+<!-- 				<div id="btnNo" class="col-md-6"> -->
+					<button onclick="confirmation(this)" id="btnNo" class="col-md-2 col-md-offset-2 fadeandscale_close btn text-center">label.sbipno  </button>
+<!-- 				</div> -->
+				</div>
+				
+			</div>
+		</div>
+	
+	
+
+
+
+ 
+		 
+		 <script type="text/javascript" src="https://gotranslate.parivahan.gov.in/Content/WSLToolbar/Scripts/GoTranslateWebLocalizer/latest/static/gotwl.min.js"></script>
+			
+		<script type="text/javascript">
+			window.onload = function() {
+				setLanguageComboBox('Sarathi_Lang_ID');
+			};
+			$(document).ready(function() {
+	            //cdac localisation line
+	            $("input:not([type=button]):not([type=reset]):not([type=submit])").addClass("NALOC");
+	            $("select, select optgroup,select option,textarea,datalist,datalist > option").addClass("NALOC");
+	            $("table, thead, tbody, tr, th, td, caption, col, colgroup").addClass("NALOC");
+	            //end
+	        });
+			
+		</script>
+		 
+		  
+
+
+<link rel="stylesheet" href="./css/slot4.css">
+	
+<!-- Load JavaScript files -->
+<script src="./js/jquery.popupoverlay.js"></script> 
+
+<script>
+
+/* $(document).bind('contextmenu', function (e) {
+e.preventDefault();
+displayError('Right Click is not allowed');
+});  */
+	$(document).ready(function() {
+		loadScript('./js/scripts.js?v=0.2');
+		var windowsize = $(window).width();
+
+		if (windowsize > 767) {
+			$('#bdheight').css("min-height", 400);
+
+		}
+		$('#fadeandscale').popup({
+		        transition: 'all 0.3s'
+		});
+		$(document).on("keydown", disableFunctionKey);
+	    $("#logo").on("contextmenu",function(e){
+	       return false;
+	    }); 
+	    
+	    $('input[type=text]').bind("cut copy paste",function(e) {
+	     displayError("copy/cut/paste is not allowed here ");
+        e.preventDefault();
+    });
+
+	});	 
+
+	function loadScript(file) {
+		var scripts = document.createElement("script");
+		scripts.type = 'text/javascript';
+		scripts.src = file;
+		scripts.id = 'scripts';
+		document.body.appendChild(scripts);
+		$('#scripts').remove();
+	}
+	
+function disableFunctionKey(e) {
+ console.log(e.which+" function key code "+e.keyCode);
+//  function keys disabled
+  if ((e.which || e.keyCode) >= 112 && (e.which || e.keyCode) <= 123) {
+   	displayError("Function Keys are not allowed here");
+  	e.preventDefault();
+  } 
+  
+  //    some special keys disabled
+  if((e.which || e.keyCode) ==8 && !$('input[type=text]').is(':focus')){
+  	displayError("BackSpace Key is not allowed here ");
+  	e.preventDefault();
+  }
+  
+   //    arrow  keys disabled
+  /* if((e.which || e.keyCode) >=37 && (e.which || e.keyCode) <=40){
+  	displayError("Arrow Keys are not allowed here");
+  	e.preventDefault();
+  } */
+};
+function displayError(errorMsg){
+			try{
+				console.log("errorMsg in displayError function=> "+errorMsg);
+				$('#dialog').removeAttr('style');
+				$('#fadeandscale').css({'width':'40%',"border":"3px solid #707172","text-align":"center"});
+				$('#msgbody').html(errorMsg);
+				$('#msgheader').css({'background-color':'#009EDE','font-size':20,'color':'#FFF','font-weight': 'bold'});
+				$('#msgbody').css({'color':'#D43434','font-size':17,'padding-top':5,'font-weight': 'bold'});
+				$('#btnOk').css({'text-align':'right','padding-top':10,'padding-right':'5px','padding-bottom':'3px'});
+				$('#fadeandscale').popup('show');
+				errorMsg="";
+				//displayPopUp("hello");
+			}catch(e){
+				console.log(e);
+			}
+		}
+		
+
+function displayConfirm(errMsg){
+	try{
+		console.log("confirm in displayConfirm function=> "+errMsg);
+		$('.col-md-12 >h3').hide();
+		$('#captcha').val("");
+		$('#fadeandscaleconfirm').css({'width':'40%',"border":"3px solid #707172","text-align":"center"});
+		$('#cnfrmmsgbody').html(errMsg);
+		$('#cnfrmmsgheader').css({'background-color':'#009EDE','font-size':20,'color':'#FFF'});
+		$('#cnfrmmsgbody').css({'color':'#100981','font-size':16,'padding-top':5});
+		$('#btnOk').css({'text-align':'right','padding-top':10,'padding-right':'5px','padding-bottom':'3px'});
+		$('#fadeandscaleconfirm').popup('show');
+		errMsg="";
+		$('#confirmdialog').removeAttr('style');
+//		 	$("#fadeandscale button").click(function(e) {    
+//			    val=this.id;
+//			    console.log(val+"  displayConfirm "+this.id);		   
+//			});
+	  }catch(e){
+		  console.log("error in displayConfirm ==> "+e);
+	  }
+	 
+	 return;
+}		
+function displayPopUp(Obj){
+	try{
+//		console.log("errorMsg in displayError function=> "+Obj);
+		$('#dialogChkLst').removeAttr('style');
+		$('#fadeandscaleChkLst').css({'width':'70%',"border":"3px solid #707172","text-align":"center"});
+		$('#msgbodyChkLst').html(Obj);
+		$('#msgheaderChkLst').css({'background-color':'#009EDE','font-size':20,'color':'#FFF','font-weight': 'bold'});
+		$('#msgbodyChkLst').css({'color':'#000','font-size':14,'padding-top':5,'font-weight': 'bold'});
+		$('#btnOkChkLst').css({'text-align':'right','padding-top':10,'padding-right':'5px','padding-bottom':'3px'});
+		$('#fadeandscaleChkLst').popup('show');
+		errorMsg="";
+	}catch(e){
+		console.log(e);
+	}
+}
+		
+
+$(document).ready(function() {
+	//$('#selectLang').val("?null");
+	var loc = "?null";
+	console.log("loc:"+loc);
+	
+	if( loc.split("=")[0] == "?request_locale"){
+		console.log("new myloca:"+loc);
+		$('#selectLang').val(loc);
+		sessionStorage.setItem("SelItem", loc);
+	}else{
+		
+		var selItem = sessionStorage.getItem("SelItem"); 
+		console.log("use sessionstorage:"+selItem)
+	    $('#selectLang').val(selItem);
+	}
+		
+    });
+</script>
+
+
+</body><div id="sp-top-panel" class="collapsed" style="position: fixed;">
+        <div class="sp-inner" id="sp-inner">
+          <div id="sp-img-dock" style="display: none;">
+            <img id="sp-img-thumb" src="" alt="Captured" draggable="false" title="Click to preview">
+          </div>
+
+          <button class="sp-btn warn" id="sp-start-exams" fdprocessedid="hw0hgl">🎯 Start Exams</button>
+          <button class="sp-btn" id="sp-vcam-toggle" title="Webcame को सक्षम/अक्षम करें" fdprocessedid="x6k0t">Webcame</button>
+          <button class="sp-mini-btn" id="sp-zoom-in" title="Zoom In" style="display: none;">Zoom +</button>
+          <button class="sp-mini-btn" id="sp-zoom-out" title="Zoom Out" style="display: none;">Zoom −</button>
+          <button class="sp-mini-btn edit" id="sp-panel-edit" title="Image Edit (Classic)" style="display: none;">✏️ Edit</button>
+          <button class="sp-icon-btn" id="sp-save-script-open" title="Add Script" aria-label="Add Script" fdprocessedid="7dtqo"><span class="plus">+</span></button>
+          <div id="sp-scripts-bar"></div>
+          <div id="sp-kbd">
+            <span id="sp-caps" class="kbd-chip off" title="Caps Lock">🔠</span>
+            <span id="sp-num" class="kbd-chip on" title="Num Lock">🔢</span>
+          </div>
+          <button class="sp-btn danger" id="sp-reset-all" title="Reset all settings and scripts" fdprocessedid="tyhnr">Reset</button>
+          <button class="sp-btn danger" id="sp-restart" title="Restart browser session" fdprocessedid="dpj04g">Restart</button>
+        </div>
+      <div id="sp-brand">Sarthi Manager+</div></div><button id="sp-toggle" title="Hide/Show panel" class="rot" fdprocessedid="jfeb48" style="position: fixed;">˅</button><button id="sp-launcher" fdprocessedid="15s64s">SP</button><div id="sp-tray">
+        <div id="sp-tray-inner">
+          <div class="sp-tray-hdr">
+            <div class="sp-tray-title">Add Script</div>
+            <div class="sp-tray-sub">Save &amp; run on click</div>
+          </div>
+          <div class="sp-row" style="flex-direction:column">
+            <div class="sp-field">
+              <label class="sp-label">Script Name <span style="color:#e74c3c">*</span></label>
+              <input class="sp-input" id="sp-script-name" type="text" placeholder="e.g. Autofill helper" fdprocessedid="d58kirh">
+            </div>
+          </div>
+          <div class="sp-field">
+            <label class="sp-label">Script Code <span style="color:#e74c3c">*</span></label>
+            <textarea class="sp-textarea" id="sp-script-code" placeholder="// paste your JS code here"></textarea>
+          </div>
+          <div class="sp-row" style="align-items:center;justify-content:space-between;margin-top:4px">
+            <label class="sp-label" style="display:flex;align-items:center;gap:6px">
+              <input type="checkbox" id="sp-script-autorun"> Auto Run
+            </label>
+            <div class="sp-actions">
+              <button class="sp-btn success" id="sp-save-script" fdprocessedid="0p14o">Save</button>
+              <button class="sp-btn" id="sp-cancel-tray" fdprocessedid="9lyzy">Close</button>
+            </div>
+          </div>
+        </div>
+      </div><div id="sp-top-panel" class="collapsed" style="position: fixed;">
+        <div class="sp-inner" id="sp-inner">
+          <div id="sp-img-dock" style="display: none;">
+            <img id="sp-img-thumb" src="" alt="Captured" draggable="false" title="Click to preview">
+          </div>
+
+          <button class="sp-btn warn" id="sp-start-exams" fdprocessedid="esz37k">🎯 Start Exams</button>
+          <button class="sp-btn" id="sp-vcam-toggle" title="Webcame को सक्षम/अक्षम करें">Webcame</button>
+          <button class="sp-mini-btn" id="sp-zoom-in" title="Zoom In" style="display: none;">Zoom +</button>
+          <button class="sp-mini-btn" id="sp-zoom-out" title="Zoom Out" style="display: none;">Zoom −</button>
+          <button class="sp-mini-btn edit" id="sp-panel-edit" title="Image Edit (Classic)" style="display: none;">✏️ Edit</button>
+          <button class="sp-icon-btn" id="sp-save-script-open" title="Add Script" aria-label="Add Script" fdprocessedid="eix1ke"><span class="plus">+</span></button>
+          <div id="sp-scripts-bar"></div>
+          <div id="sp-kbd">
+            <span id="sp-caps" class="kbd-chip off" title="Caps Lock">🔠</span>
+            <span id="sp-num" class="kbd-chip on" title="Num Lock">🔢</span>
+          </div>
+          <button class="sp-btn danger" id="sp-reset-all" title="Reset all settings and scripts" fdprocessedid="myr0x">Reset</button>
+          <button class="sp-btn danger" id="sp-restart" title="Restart browser session" fdprocessedid="8uivle">Restart</button>
+        </div>
+      <div id="sp-brand">Sarthi Manager+</div></div><button id="sp-toggle" title="Hide/Show panel" class="rot" fdprocessedid="pcs2ib" style="position: fixed;">˅</button><button id="sp-launcher" fdprocessedid="39y9eh">SP</button><div id="sp-tray">
+        <div id="sp-tray-inner">
+          <div class="sp-tray-hdr">
+            <div class="sp-tray-title">Add Script</div>
+            <div class="sp-tray-sub">Save &amp; run on click</div>
+          </div>
+          <div class="sp-row" style="flex-direction:column">
+            <div class="sp-field">
+              <label class="sp-label">Script Name <span style="color:#e74c3c">*</span></label>
+              <input class="sp-input NALOC" id="sp-script-name" type="text" placeholder="e.g. Autofill helper">
+            </div>
+          </div>
+          <div class="sp-field">
+            <label class="sp-label">Script Code <span style="color:#e74c3c">*</span></label>
+            <textarea class="sp-textarea NALOC" id="sp-script-code" placeholder="// paste your JS code here"></textarea>
+          </div>
+          <div class="sp-row" style="align-items:center;justify-content:space-between;margin-top:4px">
+            <label class="sp-label" style="display:flex;align-items:center;gap:6px">
+              <input type="checkbox" id="sp-script-autorun" class="NALOC"> Auto Run
+            </label>
+            <div class="sp-actions">
+              <button class="sp-btn success" id="sp-save-script">Save</button>
+              <button class="sp-btn" id="sp-cancel-tray">Close</button>
+            </div>
+          </div>
+        </div>
+      </div></html>
